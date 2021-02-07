@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms'
+import { Router } from '@angular/router';
 import { RegistrationService } from '../registration.service';
 import { User } from '../user';
 
@@ -10,7 +11,9 @@ import { User } from '../user';
 })
 export class LoginComponent implements OnInit {
   user = new User();
-  constructor(private _service: RegistrationService) { }
+  msg = "";
+
+  constructor(private _service: RegistrationService,private _router:Router) { }
 
   ngOnInit() {
   }
@@ -18,10 +21,15 @@ export class LoginComponent implements OnInit {
 
   loginUser() {
     this._service.loginUserFormRemote(this.user).subscribe(
-      data => console.log("response receieved")
-    ),
+      data => {
+        console.log("response receieved");
+        this._router.navigate(["login"]);
 
-      error => console.log("exception occurred")
-
+      },
+      error => {
+        console.log("exception occurred");
+        this.msg = "Bad Credentials, Please enter valid emailId and password";
+      }
+    )
   }
 }

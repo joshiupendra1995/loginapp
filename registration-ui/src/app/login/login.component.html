@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,18 +11,30 @@
 <body>
 
   <div class="container">
-    <h2>Login</h2>
-    <form #loginform="ngForm" (ngSubmit)="loginUser()">
+    <h2>User Login</h2>
+    <form #loginform="ngForm"  (ngSubmit)="loginform.form.valid && loginUser()">
       <div class="form-group">
         <label for="email">Email:</label>
-        <input type="email" class="form-control" name="email" placeholder="Enter email" [(ngModel)]="user.emailId">
+        <input type="email" class="form-control" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" name="email" placeholder="Enter email" [(ngModel)]="user.emailId"
+        #email="ngModel" [ngClass]="{ 'is-invalid': loginform.submitted && email.invalid}" required email>
+        <div *ngIf="loginform.submitted && email.invalid" class="invalid-feedback">
+          <div *ngIf="email.errors.required">email is required</div>
+          <div [hidden]="!email.errors?.pattern">
+            Invalid email format
+          </div>
+      </div>
       </div>
       <div class="form-group">
-        <label for="pwd">Password:</label>
-        <input type="password" class="form-control" name="password" placeholder="Enter password"
-          [(ngModel)]="user.password">
+        <label for="password">Password:</label>
+        <input type="password" class="form-control" minlength="8" maxlength="15" name="password" placeholder="Enter password"[(ngModel)]="user.password"
+        #password="ngModel" [ngClass]="{ 'is-invalid': loginform.submitted && password.invalid }" required>
+        <div *ngIf="loginform.submitted && password.invalid" class="invalid-feedback">
+          <div *ngIf="password.errors.required">password is required</div>
+          <div [hidden]="!password.errors?.minlength">Password length should be between 8-15</div>
       </div>
-      <button type="submit" class="btn btn-info">Submit</button>
+      <small class="text-danger">{{msg}}</small>
+      </div>
+      <button type="submit" class="btn btn-info">Sign In</button>
     </form>
   </div>
 
